@@ -1,17 +1,29 @@
 {
     "manifest_version": 2,
-  
     "name": "Hello World Demo",
     "description": "A hello world extension!",
     "version": "1.0",
     "icons": {
-      "128": "images/icon128.png",
-      "48": "images/icon48.png",
-      "16": "images/icon16.png"
+        "128": "images/icon128.png",
+        "48": "images/icon48.png",
+        "16": "images/icon16.png"
     },
-  
+
     "browser_action": {
-      "default_icon": "images/icon16.png",
-      "default_popup": "popup.html"
-    }
-  }
+        "default_icon": "images/icon16.png",
+        "default_popup": "popup.html"
+    },
+    
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": false
+      },
+    
+      "permissions": [
+        "https://dl.acm.org/doi/*",
+        "activeTab", 
+        "declarativeContent", 
+        "storage",
+        "browserAction"
+        ]
+}

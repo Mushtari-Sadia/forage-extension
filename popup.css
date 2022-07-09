@@ -1,0 +1,11 @@
+body {
+    border-radius: 25px;
+    min-width: 300px;
+    max-height: 300px;
+    font-size: 15px;
+}
+
+.dynamic-content {
+    display:none;
+    padding: 15px 15px 15px 15px;
+}

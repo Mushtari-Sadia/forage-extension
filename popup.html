@@ -11,12 +11,16 @@
 
 </head>
 <body>
-    <div id="Test1" class="dynamic-content">
+    <div id="saved" class="dynamic-content">
+        Saved to forage!
+    </div>
+
+    <div id="Project" class="dynamic-content">
         <div>
             Add to project
         </div>
 
-        <div class="dropdown show">
+        <!-- <div class="dropdown show">
             <a onclick="viewProjects()" class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Show all projects
             </a>
@@ -25,15 +29,26 @@
               <!-- <a class="dropdown-item" href="#">Action</a>
               <a class="dropdown-item" href="#">Another action</a>
               <a class="dropdown-item" href="#">Something else here</a> -->
+            <!-- </div> -->
+        <!-- </div> -->
+
+        <div>
+            <a onclick="viewProjects()" class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Show all projects
+            </a>
+          
+            <div id="project-list">
             </div>
-          </div>
+        </div>
 
     </div>
-        <div id="Test2" class="dynamic-content">
-    Test2 Text
+       
+    <div id="Collaborator" class="dynamic-content">
+        Test2 Text
     </div>
-        <div id="Test3" class="dynamic-content">
-    Test3 Text
+
+    <div id="Test3" class="dynamic-content">
+        Test3 Text
     </div>
 
     <script src="popup.js"></script>

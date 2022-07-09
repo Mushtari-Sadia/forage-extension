@@ -1,0 +1,9 @@
+body {
+    min-width: 780px;
+    max-height: 300px;
+    font-size: 20px;
+}
+
+.dynamic-content {
+    display:none;
+}

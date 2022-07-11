@@ -15,15 +15,15 @@
     },
     
     "background": {
-        "scripts": ["background.js"],
+        "scripts": ["background.js","lib.js"],
         "persistent": false
       },
     
       "permissions": [
         "https://dl.acm.org/doi/*",
+        "http://127.0.0.1:8000/*",
         "activeTab", 
         "declarativeContent", 
-        "storage",
-        "browserAction"
+        "storage"
         ]
 }

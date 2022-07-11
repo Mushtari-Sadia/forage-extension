@@ -8,6 +8,7 @@
       <meta name="viewport" content="width=device-width, initial-scale=1">
       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
       <link rel="stylesheet" type="text/css" href="popup.css">
+      
 
 </head>
 <body>
@@ -33,22 +34,46 @@
         <!-- </div> -->
 
         <div>
-            <a onclick="viewProjects()" class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Show all projects
-            </a>
-          
+            <button id="view_projects_button" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Show All Projects
+            </button>
             <div id="project-list">
+            
             </div>
         </div>
 
     </div>
        
     <div id="Collaborator" class="dynamic-content">
-        Test2 Text
+        <div>
+            Collaborators
+        </div>
+
+
+        <div>
+            <button id="view_collaborators_button" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Show All Collaborators
+            </button>
+            <div id="collaborator-list">
+            
+            </div>
+        </div>
     </div>
 
-    <div id="Test3" class="dynamic-content">
-        Test3 Text
+    <div id="Status" class="dynamic-content">
+        <div>
+            Status
+        </div>
+
+
+        <div>
+            <button id="view_status_button" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Status
+            </button>
+            <div id="status-list">
+            
+            </div>
+        </div>
     </div>
 
     <script src="popup.js"></script>

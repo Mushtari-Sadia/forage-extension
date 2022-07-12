@@ -1,23 +1,19 @@
 // import { postData,serverhost,token } from './lib.js';
 var serverhost = 'http://127.0.0.1:8000';
-var token='2a1f52e7dfab9ef3658b1263daa5dc3df5448eed'; 
+// var token='2a1f52e7dfab9ef3658b1263daa5dc3df5448eed'; 
+var token;
 var headers =  {
-    'Content-Type': 'application/json',
-    'Authorization': 'Token ' + token
+    'Content-Type': 'application/json'
 }
 
-async function postData(url = '', data = {}) {
+async function postData(url = '', data = {}, h = {'Content-Type': 'application/json'}) {
 	// Default options are marked with *
 	const response = await fetch(url, {
 	  method: 'POST', // *GET, POST, PUT, DELETE, etc.
 	  mode: 'cors', // no-cors, *cors, same-origin
 	  cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
 	  credentials: 'same-origin', // include, *same-origin, omit
-	  headers: {
-		'Content-Type': 'application/json',
-		'Authorization': 'Token ' + token
-		// 'Content-Type': 'application/x-www-form-urlencoded',
-	  },
+	  headers: h,
 	  redirect: 'follow', // manual, *follow, error
 	  referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
 	  body: JSON.stringify(data) // body data type must match "Content-Type" header
@@ -26,6 +22,27 @@ async function postData(url = '', data = {}) {
   }
 
 
+
+  if(!localStorage.getItem('token'))
+  {
+	postData(serverhost + '/auth/token/', { username: 'tahmeed', password: 'tahmeed' }, headers)
+	.then(data => {
+        localStorage['token'] = data['token'];
+        console.log("inside function call="+localStorage['token']);
+	   // JSON data parsed by `data.json()` call
+	});
+  }
+
+  
+  console.log("token="+localStorage['token']);
+  token = localStorage['token'];
+
+ headers =  {
+            'Content-Type': 'application/json',
+            'Authorization': 'Token ' + token
+        }
+        
+        
 const ids = [
     "saved",
     "Project",
@@ -41,10 +58,16 @@ var currentTabUrl="";
 chrome.tabs.query({active: true, currentWindow: true}, ([tab]) => {
 if(tab.url.includes("dl.acm.org/doi"))
 {
-    currentTabUrl=tab.url;
-    addPaperToProject("Unsorted",tab.url);
-    document.getElementById("saved").style.display = 'block';
-    document.getElementById("Project").style.display = 'block';
+
+    chrome.tabs.sendMessage(tab.id, {get: "info"}, function(response) {
+        console.log(response);
+        currentTabUrl=tab.url;
+        addPaperToUnsorted(tab.url,response.name,response.authors,response.abstract);
+        document.getElementById("saved").style.display = 'block';
+        document.getElementById("Project").style.display = 'block';
+    });
+
+    
 }
 else
 {
@@ -53,6 +76,9 @@ else
     });
 }
 });
+        
+
+
 
 function viewProjects(){
     fetch(serverhost + '/api/projects/', { headers })
@@ -110,32 +136,29 @@ function viewLists(projectID){
         })
 }
 
-
-function addPaperToProject(projectName, paperUrl, projectID = 2){
-
+function addPaperToUnsorted( paperUrl, paperName, paperAuthors, paperAbstract)
+{
     var doi = paperUrl.substring(paperUrl.lastIndexOf("doi")+4);
-    
-    if(projectName!="Unsorted")
-    {
-        console.log(projectName);
-        document.getElementById("Collaborator").style.display = 'block';
-        var vcb = document.getElementById("view_collaborators_button");
-        vcb.onclick = function () { viewCollaborators(projectID) };
-
-        document.getElementById("Status").style.display = 'block';
-        var vsb = document.getElementById("view_status_button");
-        vsb.onclick = function () { viewLists(projectID) };
-        //add api call for adding paper to project
-
-
-    }
-    else
-    {
-        postData(serverhost + '/extension/add-paper/', { doi: doi})
+    postData(serverhost + '/extension/add-paper/', { doi: doi, name: paperName, authors: paperAuthors, abstract: paperAuthors}, headers)
         .then(data => {
         console.log(data); // JSON data parsed by `data.json()` call
         });
-    }
+}
+
+
+function addPaperToProject(projectName, paperUrl, projectID){
+
+    var doi = paperUrl.substring(paperUrl.lastIndexOf("doi")+4);
+    console.log(projectName);
+    document.getElementById("Collaborator").style.display = 'block';
+    var vcb = document.getElementById("view_collaborators_button");
+    vcb.onclick = function () { viewCollaborators(projectID) };
+
+    document.getElementById("Status").style.display = 'block';
+    var vsb = document.getElementById("view_status_button");
+    vsb.onclick = function () { viewLists(projectID) };
+    //add api call for adding paper to project
+
 }
 
 

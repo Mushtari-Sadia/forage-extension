@@ -18,12 +18,21 @@
         "scripts": ["background.js","lib.js"],
         "persistent": false
       },
+
+    "content_scripts":[
+    {
+        "matches": ["https://dl.acm.org/doi/*"],
+        "js": ["content.js"]
+    }
+    ],
     
       "permissions": [
         "https://dl.acm.org/doi/*",
         "http://127.0.0.1:8000/*",
         "activeTab", 
         "declarativeContent", 
-        "storage"
+        "storage",
+        "cookies",
+        "<all_urls>"
         ]
 }

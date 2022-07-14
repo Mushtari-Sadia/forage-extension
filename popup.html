@@ -12,10 +12,10 @@
 
 </head>
 <body>
+    <div class="bg">
     <div id="saved" class="dynamic-content">
         Saved to forage!
     </div>
-
     <div id="Project" class="dynamic-content">
         <div>
             Add to project
@@ -33,29 +33,27 @@
             <!-- </div> -->
         <!-- </div> -->
 
-        <div>
+        <!-- <div>
             <button id="view_projects_button" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Show All Projects
             </button>
             <div id="project-list">
             
             </div>
+        </div> -->
+        <div class="dropdown">
+            <button class="dropbtn" id="view_projects_button">Show Projects</button>
+            <div id="project-list" class="dropdown-content">
+            </div>
         </div>
-
     </div>
-       
     <div id="Collaborator" class="dynamic-content">
         <div>
             Collaborators
         </div>
-
-
-        <div>
-            <button id="view_collaborators_button" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Show All Collaborators
-            </button>
-            <div id="collaborator-list">
-            
+        <div class="dropdown">
+            <button class="dropbtn" id="view_collaborators_button">Show Collaborators</button>
+            <div id="collaborator-list" class="dropdown-content">
             </div>
         </div>
     </div>
@@ -65,16 +63,13 @@
             Status
         </div>
 
-
-        <div>
-            <button id="view_status_button" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Status
-            </button>
-            <div id="status-list">
-            
+        <div class="dropdown">
+            <button class="dropbtn" id="view_status_button">Show Statuses</button>
+            <div id="status-list" class="dropdown-content">
             </div>
         </div>
     </div>
+</div>
 
     <script src="popup.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

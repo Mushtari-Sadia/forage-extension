@@ -2,6 +2,9 @@
 var serverhost = 'http://127.0.0.1:8000';
 // var token='2a1f52e7dfab9ef3658b1263daa5dc3df5448eed'; 
 var token;
+var executed = false;
+var executed_colab = false;
+var executed_lists = false;
 var headers =  {
     'Content-Type': 'application/json'
 }
@@ -81,8 +84,10 @@ else
 
 
 function viewProjects(){
-    document.getElementById("view_projects_button").style.display = 'none';
-    fetch(serverhost + '/api/projects/', { headers })
+    if(!executed)
+    {
+        // document.getElementById("view_projects_button").style.display = 'none';
+        fetch(serverhost + '/api/projects/', { headers })
         .then(response => response.json())
         .then(data => {
             var ul = document.getElementById("project-list");
@@ -90,7 +95,7 @@ function viewProjects(){
             data['results'].forEach(element => {
                 if(element['name']!="Unsorted")
                 {
-                    var button = document.createElement("button");
+                    var button = document.createElement("a");
                     button.setAttribute('id',element['name']);
                     button.style.display = 'block';
                     button.onclick = function () { addPaperToProject(element['name'],currentTabUrl,element['id']); };
@@ -99,19 +104,24 @@ function viewProjects(){
                 }
             }); 
         })
+        executed=true;
+    }
+    
 }
-document.getElementById("view_projects_button").addEventListener("click", viewProjects);
+document.getElementById("view_projects_button").addEventListener("mouseover", viewProjects);
 
 
 function viewCollaborators(projectID){
-    document.getElementById("view_collaborators_button").style.display = 'none';
-    fetch(serverhost + '/api/projects/'+projectID+'/collaborators/', { headers })
+    if(!executed_colab)
+    {
+        // document.getElementById("view_collaborators_button").style.display = 'none';
+        fetch(serverhost + '/api/projects/'+projectID+'/collaborators/', { headers })
         .then(response => response.json())
         .then(data => {
             var ul = document.getElementById("collaborator-list");
             
             data.forEach(element => {
-                var button = document.createElement("button");
+                var button = document.createElement("a");
                 button.setAttribute('id',element['name']+element['id']);
                 button.style.display = 'block';
                 button.onclick = function () { assignCollaboratorToPaper(element['id'],projectID,currentTabUrl); };
@@ -119,17 +129,22 @@ function viewCollaborators(projectID){
                 ul.appendChild(button);
             }); 
         })
+    }
+    executed_colab=true;
+    
 }
 
 function viewLists(projectID){
-    document.getElementById("view_status_button").style.display = 'none';
-    fetch(serverhost + '/api/projects/'+projectID+'/lists/', { headers })
+    if(!executed_lists)
+    {
+        // document.getElementById("view_status_button").style.display = 'none';
+        fetch(serverhost + '/api/projects/'+projectID+'/lists/', { headers })
         .then(response => response.json())
         .then(data => {
             var ul = document.getElementById("status-list");
             
             data.forEach(element => {
-                var button = document.createElement("button");
+                var button = document.createElement("a");
                 button.setAttribute('id',element['name']+element['id']);
                 button.style.display = 'block';
                 button.onclick = function () { assignStatusToPaper(element['id'],projectID,currentTabUrl); };
@@ -137,6 +152,8 @@ function viewLists(projectID){
                 ul.appendChild(button);
             }); 
         })
+        executed_lists=true;
+    }
 }
 
 function addPaperToUnsorted( paperUrl, paperName, paperAuthors, paperAbstract)
@@ -155,11 +172,11 @@ function addPaperToProject(projectName, paperUrl, projectID){
     console.log(projectName);
     document.getElementById("Collaborator").style.display = 'block';
     var vcb = document.getElementById("view_collaborators_button");
-    vcb.onclick = function () { viewCollaborators(projectID) };
+    vcb.onmouseover = function () { viewCollaborators(projectID) };
 
     document.getElementById("Status").style.display = 'block';
     var vsb = document.getElementById("view_status_button");
-    vsb.onclick = function () { viewLists(projectID) };
+    vsb.onmouseover = function () { viewLists(projectID) };
     //add api call for adding paper to project
 
 }

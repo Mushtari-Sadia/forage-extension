@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
-    "name": "Hello World Demo",
-    "description": "A hello world extension!",
+    "name": "Forage",
+    "description": "Save papers on the go!",
     "version": "1.0",
     "icons": {
         "128": "images/icon128.png",

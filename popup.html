@@ -12,45 +12,51 @@
 
 </head>
 <body>
-    <div class="bg">
-    <div id="saved" class="dynamic-content">
-        Saved to forage!
+    <div >
+        <img src="https://i.ibb.co/JtZPbWP/image.png" alt="image" border="0" width="87px" height="45px">
+    </div>
+    <div id="saved" class="saved-class">
+        Saved!
     </div>
     <div id="Project" class="dynamic-content">
-        <div>
+        <div id="add_project">
             Add to project
         </div>
-
-        <!-- <div class="dropdown show">
-            <a onclick="viewProjects()" class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Show all projects
-            </a>
-          
-            <div id="project-list" class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-              <!-- <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a> -->
-            <!-- </div> -->
-        <!-- </div> -->
-
-        <!-- <div>
-            <button id="view_projects_button" class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Show All Projects
-            </button>
-            <div id="project-list">
-            
+        <!-- <input class="dark-light" type="checkbox" id="dark-light" name="dark-light"/>
+        <label for="dark-light"></label>
+  
+        <div class="light-back"></div>  -->
+  
+      <!-- <a href="https://front.codes/" class="logo" target="_blank">
+          <img src="https://assets.codepen.io/1462889/fcy.png" alt="">
+      </a> -->
+  
+        <!-- <div class="sec-center"> 	
+            <input class="dropdown" type="checkbox" id="dropdown" name="dropdown"/>
+            <label class="for-dropdown" for="dropdown" id="view_projects_button">Show Projects <i class="uil uil-arrow-down"></i></label>
+            <div id="project-list" class="section-dropdown"> 
             </div>
         </div> -->
-        <div class="dropdown">
+         <div class="dropdown">
             <button class="dropbtn" id="view_projects_button">Show Projects</button>
             <div id="project-list" class="dropdown-content">
             </div>
         </div>
+
+
     </div>
     <div id="Collaborator" class="dynamic-content">
-        <div>
+        <div id="add_collaborator">
             Collaborators
         </div>
+
+        <!-- <div class="sec-center"> 	
+            <input class="dropdown" type="checkbox" id="dropdown" name="dropdown"/>
+            <label class="for-dropdown" for="dropdown" id="view_collaborators_button">Show Collaborators <i class="uil uil-arrow-down"></i></label>
+            <div id="collaborator-list" class="section-dropdown"> 
+            </div>
+        </div> -->
+
         <div class="dropdown">
             <button class="dropbtn" id="view_collaborators_button">Show Collaborators</button>
             <div id="collaborator-list" class="dropdown-content">
@@ -58,18 +64,25 @@
         </div>
     </div>
 
-    <div id="Status" class="dynamic-content">
-        <div>
-            Status
+    <div id="list" class="dynamic-content">
+        <div id="add_list">
+            List
         </div>
+        <!-- <div class="sec-center"> 	
+            <input class="dropdown" type="checkbox" id="dropdown" name="dropdown"/>
+            <label class="for-dropdown" for="dropdown" id="view_list_button">Show Lists <i class="uil uil-arrow-down"></i></label>
+            <div id="list-list" class="section-dropdown"> 
+            </div>
+        </div> -->
 
         <div class="dropdown">
-            <button class="dropbtn" id="view_status_button">Show Statuses</button>
-            <div id="status-list" class="dropdown-content">
+            <button class="dropbtn" id="view_list_button">Show Lists</button>
+            <div id="list-list" class="dropdown-content">
             </div>
         </div>
+        
     </div>
-</div>
+
 
     <script src="popup.js"></script>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

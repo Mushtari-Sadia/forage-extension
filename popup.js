@@ -9,6 +9,9 @@ var headers =  {
     'Content-Type': 'application/json'
 }
 
+var paper_data = {"ppid" : ""};
+var project_lists;
+
 async function postData(url = '', data = {}, h = {'Content-Type': 'application/json'}) {
 	// Default options are marked with *
 	const response = await fetch(url, {
@@ -46,15 +49,7 @@ async function postData(url = '', data = {}, h = {'Content-Type': 'application/j
         }
         
         
-const ids = [
-    "saved",
-    "Project",
-    "Collaborator",
-    "Status"
-]
-ids.forEach(element => {
-    document.getElementById(element).style.display = 'none';
-});
+
 
 
 var currentTabUrl="";
@@ -66,6 +61,7 @@ if(tab.url.includes("dl.acm.org/doi"))
         console.log(response);
         currentTabUrl=tab.url;
         addPaperToUnsorted(tab.url,response.name,response.authors,response.abstract);
+        getProjects();
         document.getElementById("saved").style.display = 'block';
         document.getElementById("Project").style.display = 'block';
     });
@@ -83,7 +79,7 @@ else
 
 
 
-function viewProjects(){
+function getProjects(){
     if(!executed)
     {
         // document.getElementById("view_projects_button").style.display = 'none';
@@ -98,7 +94,10 @@ function viewProjects(){
                     var button = document.createElement("a");
                     button.setAttribute('id',element['name']);
                     button.style.display = 'block';
-                    button.onclick = function () { addPaperToProject(element['name'],currentTabUrl,element['id']); };
+                    button.onclick = function () { 
+                        getLists(element['id']);
+                        addPaperToProject(element['name'],currentTabUrl,element['id']);
+                     };
                     button.innerHTML = element['name'];
                     ul.appendChild(button);
                 }
@@ -108,7 +107,7 @@ function viewProjects(){
     }
     
 }
-document.getElementById("view_projects_button").addEventListener("mouseover", viewProjects);
+// document.getElementById("view_projects_button").addEventListener("mouseover", viewProjects);
 
 
 function viewCollaborators(projectID){
@@ -134,24 +133,33 @@ function viewCollaborators(projectID){
     
 }
 
+function getLists(projectID)
+{
+    fetch(serverhost + '/api/projects/'+projectID+'/lists/', { headers })
+        .then(response => response.json())
+        .then(data => {
+            project_lists = data;
+        }); 
+    console.log("project lists");
+    console.log(project_lists);
+    console.log("first list");
+    console.log(project_lists['results'][0]['id']);
+}
+
 function viewLists(projectID){
     if(!executed_lists)
     {
-        // document.getElementById("view_status_button").style.display = 'none';
-        fetch(serverhost + '/api/projects/'+projectID+'/lists/', { headers })
-        .then(response => response.json())
-        .then(data => {
-            var ul = document.getElementById("status-list");
+        // document.getElementById("view_list_button").style.display = 'none';
+        var ul = document.getElementById("list-list");
             
-            data.forEach(element => {
+        project_lists['results'].forEach(element => {
                 var button = document.createElement("a");
                 button.setAttribute('id',element['name']+element['id']);
                 button.style.display = 'block';
-                button.onclick = function () { assignStatusToPaper(element['id'],projectID,currentTabUrl); };
+                button.onclick = function () { assignlistToPaper(element['id'],projectID,element['name']); };
                 button.innerHTML = element['name'];
                 ul.appendChild(button);
             }); 
-        })
         executed_lists=true;
     }
 }
@@ -162,6 +170,7 @@ function addPaperToUnsorted( paperUrl, paperName, paperAuthors, paperAbstract)
     postData(serverhost + '/extension/add-paper/', { doi: doi, name: paperName, authors: paperAuthors, abstract: paperAuthors}, headers)
         .then(data => {
         console.log(data); // JSON data parsed by `data.json()` call
+        paper_data["ppid"] = data['ppid'];
         });
 }
 
@@ -174,11 +183,17 @@ function addPaperToProject(projectName, paperUrl, projectID){
     var vcb = document.getElementById("view_collaborators_button");
     vcb.onmouseover = function () { viewCollaborators(projectID) };
 
-    document.getElementById("Status").style.display = 'block';
-    var vsb = document.getElementById("view_status_button");
+    document.getElementById("list").style.display = 'block';
+    var vsb = document.getElementById("view_list_button");
     vsb.onmouseover = function () { viewLists(projectID) };
     //add api call for adding paper to project
-
+    postData(serverhost + '/extension/paper-to-project/', { "ppid": paper_data["ppid"], "list_id": project_lists['results'][0]['id'], "project_id": projectID}, headers)
+        .then(data => {
+        console.log(data); // JSON data parsed by `data.json()` call
+        });
+     document.getElementById("view_projects_button").style.display = 'none';
+     document.getElementById("add_project").textContent = "Added to project "+projectName;
+     document.getElementById("project-list").style.display = 'none';
 }
 
 
@@ -186,10 +201,19 @@ function assignCollaboratorToPaper(collaboratorID,projectId,paperUrl)
 {
     var doi = paperUrl.substring(paperUrl.lastIndexOf("doi")+4);
     console.log("collaboratorID="+collaboratorID+" projectId="+projectId+" doi="+doi)
+
 }
 
-function assignStatusToPaper(statusID,projectId,paperUrl)
+function assignlistToPaper(listID,projectId,listName)
 {
-    var doi = paperUrl.substring(paperUrl.lastIndexOf("doi")+4);
-    console.log("statusID="+statusID+" projectId="+projectId+" doi="+doi)
+    console.log("listID="+listID+" projectId="+projectId+" listname="+listName)
+    postData(serverhost + '/extension/paper-to-project/', { "ppid": paper_data["ppid"], "list_id": listID, "project_id": projectId}, headers)
+        .then(data => {
+        console.log(data); // JSON data parsed by `data.json()` call
+        });
+
+    
+    var button = document.getElementById("view_list_button");
+    document.getElementById("list").textContent = "Added to list "+listName;
+    
 }

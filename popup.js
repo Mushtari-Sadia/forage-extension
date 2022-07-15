@@ -47,27 +47,41 @@ async function postData(url = '', data = {}, h = {'Content-Type': 'application/j
             'Content-Type': 'application/json',
             'Authorization': 'Token ' + token
         }
-        
-        
-
-
 
 var currentTabUrl="";
 chrome.tabs.query({active: true, currentWindow: true}, ([tab]) => {
+
+var info="";
 if(tab.url.includes("dl.acm.org/doi"))
 {
+    info = "acm";
+}
+else if(tab.url.includes("ieeexplore.ieee.org/document/"))
+{
+    info = "ieee";
+}
 
-    chrome.tabs.sendMessage(tab.id, {get: "info"}, function(response) {
+if(!info=="")
+{
+    chrome.tabs.sendMessage(tab.id, {get: info}, function(response) {
         console.log(response);
-        currentTabUrl=tab.url;
-        addPaperToUnsorted(tab.url,response.name,response.authors,response.abstract);
+        var doi;
+        if(info=="acm")
+        {
+            currentTabUrl = tab.url;
+            doi = currentTabUrl.substring(currentTabUrl.lastIndexOf("doi")+4);
+        }
+        else if(info=="ieee")
+        {
+            doi=response.doi;
+        }
+        addPaperToUnsorted(doi,response.name,response.authors,response.abstract);
         getProjects();
         document.getElementById("saved").style.display = 'block';
         document.getElementById("Project").style.display = 'block';
     });
-
-    
 }
+
 else
 {
     ids.forEach(element => {
@@ -87,7 +101,7 @@ function getProjects(){
         .then(response => response.json())
         .then(data => {
             var ul = document.getElementById("project-list");
-            
+            console.log(data['results']);
             data['results'].forEach(element => {
                 if(element['name']!="Unsorted")
                 {
@@ -113,18 +127,20 @@ function getProjects(){
 function viewCollaborators(projectID){
     if(!executed_colab)
     {
+        console.log("view collaborators");
         // document.getElementById("view_collaborators_button").style.display = 'none';
         fetch(serverhost + '/api/projects/'+projectID+'/collaborators/', { headers })
         .then(response => response.json())
         .then(data => {
             var ul = document.getElementById("collaborator-list");
-            
-            data.forEach(element => {
+            console.log(data);
+            data['results'].forEach(element => {
+                elem = element['collaborator'];
                 var button = document.createElement("a");
-                button.setAttribute('id',element['name']+element['id']);
+                button.setAttribute('id',elem['username']+elem['id']);
                 button.style.display = 'block';
-                button.onclick = function () { assignCollaboratorToPaper(element['id'],projectID,currentTabUrl); };
-                button.innerHTML = element['username'];
+                button.onclick = function () { assignCollaboratorToPaper(elem['id'],projectID,currentTabUrl); };
+                button.innerHTML = elem['username'];
                 ul.appendChild(button);
             }); 
         })
@@ -164,10 +180,10 @@ function viewLists(projectID){
     }
 }
 
-function addPaperToUnsorted( paperUrl, paperName, paperAuthors, paperAbstract)
+function addPaperToUnsorted( doi, paperName, paperAuthors, paperAbstract)
 {
-    var doi = paperUrl.substring(paperUrl.lastIndexOf("doi")+4);
-    postData(serverhost + '/extension/add-paper/', { doi: doi, name: paperName, authors: paperAuthors, abstract: paperAuthors}, headers)
+    
+    postData(serverhost + '/extension/add-paper/', { doi: doi, name: paperName, authors: paperAuthors, abstract: paperAbstract}, headers)
         .then(data => {
         console.log(data); // JSON data parsed by `data.json()` call
         paper_data["ppid"] = data['ppid'];

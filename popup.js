@@ -139,7 +139,7 @@ function viewCollaborators(projectID){
                 var button = document.createElement("a");
                 button.setAttribute('id',elem['username']+elem['id']);
                 button.style.display = 'block';
-                button.onclick = function () { assignCollaboratorToPaper(elem['id'],projectID,currentTabUrl); };
+                button.onclick = function () { assignCollaboratorToPaper(elem['id'],projectID,elem['username']); };
                 button.innerHTML = elem['username'];
                 ul.appendChild(button);
             }); 
@@ -199,7 +199,7 @@ function addPaperToProject(projectName, paperUrl, projectID){
     var vcb = document.getElementById("view_collaborators_button");
     vcb.onmouseover = function () { viewCollaborators(projectID) };
 
-    document.getElementById("list").style.display = 'block';
+    document.getElementById("List").style.display = 'block';
     var vsb = document.getElementById("view_list_button");
     vsb.onmouseover = function () { viewLists(projectID) };
     //add api call for adding paper to project
@@ -207,16 +207,22 @@ function addPaperToProject(projectName, paperUrl, projectID){
         .then(data => {
         console.log(data); // JSON data parsed by `data.json()` call
         });
-     document.getElementById("view_projects_button").style.display = 'none';
-     document.getElementById("add_project").textContent = "Added to project "+projectName;
+     document.getElementById("view_projects_button").style.display = 'none';    
+     document.getElementById("Project").textContent = "Added to project \""+projectName+"\" ✔";
      document.getElementById("project-list").style.display = 'none';
 }
 
 
-function assignCollaboratorToPaper(collaboratorID,projectId,paperUrl)
+function assignCollaboratorToPaper(collaboratorID,projectId,username)
 {
-    var doi = paperUrl.substring(paperUrl.lastIndexOf("doi")+4);
-    console.log("collaboratorID="+collaboratorID+" projectId="+projectId+" doi="+doi)
+    postData(serverhost + '/extension/collaborator-to-paper/', { "ppid": paper_data["ppid"], "pcid": collaboratorID}, headers)
+        .then(data => {
+        console.log(data); // JSON data parsed by `data.json()` call
+        });
+
+    
+    document.getElementById("view_collaborators_button").style.display = 'none';
+    document.getElementById("Collaborator").textContent = username + " was added to paper ✔";
 
 }
 
@@ -229,7 +235,7 @@ function assignlistToPaper(listID,projectId,listName)
         });
 
     
-    var button = document.getElementById("view_list_button");
-    document.getElementById("list").textContent = "Added to list "+listName;
+    document.getElementById("view_list_button").style.display = 'none';
+    document.getElementById("List").textContent = "Added to list \""+listName+"\" ✔";
     
 }

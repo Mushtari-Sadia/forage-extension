@@ -1,6 +1,7 @@
 var paper_doi;
 var paper_name;
 var abstract;
+var venue = {};
 var authors = [];
 
 curUrl = document.location.href;
@@ -20,10 +21,30 @@ if(curUrl.includes("dl.acm.org/doi"))
         if (divs[i].className == 'abstractSection abstractInFull') {
             console.log(divs[i]);
             console.log(divs[i].childNodes);
-            abstract_p = divs[i].childNodes[1];
+            abstract_p = divs[i].childNodes[0];
             console.log(abstract_p);
             abstract = abstract_p.textContent;
             console.log(abstract);
+        }
+
+        // get journal / conference
+        if (divs[i].className == 'issue-item__detail') {
+            venue_div = divs[i].childNodes[0];
+            venue = {
+                venue: venue_div.title,
+                website: venue_div.href,
+            }
+            // console.log(venue.title, " and ", venue.href);
+            if (venue_div.href.includes("doi")){
+                // then this is conference
+                venue.type = "conference";
+                console.log(venue + ": Conference");
+            }
+            else {
+                // then this is journal ??
+                venue.type = "journal";
+                console.log(venue + ": Journal");
+            }
         }
     }
 
@@ -75,6 +96,18 @@ else if(curUrl.includes("ieeexplore.ieee.org/document/"))
         abstract += ab[i].textContent;
     }
     console.log(abstract);
+
+    // get venue
+    venue = {}
+    var venue_div = document.getElementsByTagName("div");
+    for (var i = 0; i < venue_div.length; i++) {
+        if (venue_div[i].className == 'u-pb-1 stats-document-abstract-publishedIn') {
+            venue.type = JSON.parse(venue_div[i].getAttribute("data-tealium_data")).docType.toLowerCase();
+            venue.venue = venue_div[i].childNodes[1].textContent;
+            venue.website = venue_div[i].childNodes[1].href;
+        }
+    }
+    // console.log(venue)
 }
 
 
@@ -82,15 +115,16 @@ else if(curUrl.includes("ieeexplore.ieee.org/document/"))
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
+        console.log("request get : ", request.get)
       if (request.get === "acm") {
-          var data = {name: paper_name, authors: authors, abstract: abstract};
-          console.log(data);
+        var data = {name: paper_name, authors: authors, abstract: abstract, venue: venue};
+        console.log(data);
         sendResponse(data);
       }
       else if (request.get === "ieee") {
-        var data = {doi: paper_doi, name: paper_name, authors: authors, abstract: abstract};
+        var data = {doi: paper_doi, name: paper_name, authors: authors, abstract: abstract, venue: venue};
         console.log(data);
-      sendResponse(data);
+        sendResponse(data);
     }
     }
 );

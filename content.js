@@ -2,6 +2,7 @@ var paper_doi;
 var paper_name;
 var abstract;
 var venue = {};
+var keywords = [];
 var authors = [];
 
 curUrl = document.location.href;
@@ -57,9 +58,18 @@ if(curUrl.includes("dl.acm.org/doi"))
     for (var i = 3; i < authors_li.length; i=i+2) {
         var auths = authors_li[i].childNodes[0];
         authors.push(auths.getAttribute("title"));
-        
+    }
+
+
+    // get keywords
+    var ahrefs = document.getElementsByTagName("a");
+    for(var i=0; i<ahrefs.length; i++) {
+        if(ahrefs[i].href.includes("keyword")){
+            keywords.push(decodeURI(ahrefs[i].href.split("/")[4].split("?")[0]))
+        }
     }
 }
+
 else if(curUrl.includes("ieeexplore.ieee.org/document/"))
 {
     //append-to-href="?src=document"
@@ -117,7 +127,7 @@ chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         console.log("request get : ", request.get)
       if (request.get === "acm") {
-        var data = {name: paper_name, authors: authors, abstract: abstract, venue: venue};
+        var data = {name: paper_name, authors: authors, abstract: abstract, venue: venue, keywords:keywords};
         console.log(data);
         sendResponse(data);
       }

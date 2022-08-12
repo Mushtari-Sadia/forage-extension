@@ -24,6 +24,8 @@ async function postData(url = '', data = {}, h = {'Content-Type': 'application/j
 	  referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
 	  body: JSON.stringify(data) // body data type must match "Content-Type" header
 	});
+    console.log(JSON.stringify(data))
+    // console.log(response.json())
 	return response.json(); // parses JSON response into native JavaScript objects
   }
 
@@ -75,7 +77,7 @@ if(!info=="")
         {
             doi=response.doi;
         }
-        addPaperToUnsorted(doi,response.name,response.authors,response.abstract);
+        addPaperToUnsorted(doi,response.name,response.authors,response.abstract, response.venue, response.keywords);
         getProjects();
         document.getElementById("saved").style.display = 'block';
         document.getElementById("Project").style.display = 'block';
@@ -180,10 +182,12 @@ function viewLists(projectID){
     }
 }
 
-function addPaperToUnsorted( doi, paperName, paperAuthors, paperAbstract)
+function addPaperToUnsorted(doi, paperName, paperAuthors, paperAbstract, venue, keywords)
 {
-    
-    postData(serverhost + '/extension/add-paper/', { doi: doi, name: paperName, authors: paperAuthors, abstract: paperAbstract}, headers)
+    postData(serverhost + '/extension/add-paper/', { 
+        doi: doi, name: paperName, authors: paperAuthors, abstract: paperAbstract,
+        venue: venue.venue, venue_website: venue.website, venue_type: venue.type, keywords:keywords
+    }, headers)
         .then(data => {
         console.log(data); // JSON data parsed by `data.json()` call
         paper_data["ppid"] = data['ppid'];

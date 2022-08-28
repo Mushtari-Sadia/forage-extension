@@ -207,6 +207,8 @@ function addPaperToProject(projectName, paperUrl, projectID){
     var vsb = document.getElementById("view_list_button");
     vsb.onmouseover = function () { viewLists(projectID) };
     //add api call for adding paper to project
+
+    console.log({ "ppid": paper_data["ppid"], "list_id": project_lists['results'][0]['id'], "project_id": projectID});
     postData(serverhost + '/extension/paper-to-project/', { "ppid": paper_data["ppid"], "list_id": project_lists['results'][0]['id'], "project_id": projectID}, headers)
         .then(data => {
         console.log(data); // JSON data parsed by `data.json()` call
@@ -233,6 +235,7 @@ function assignCollaboratorToPaper(collaboratorID,projectId,username)
 function assignlistToPaper(listID,projectId,listName)
 {
     console.log("listID="+listID+" projectId="+projectId+" listname="+listName)
+    console.log({ "ppid": paper_data["ppid"], "list_id": listID, "project_id": projectId});
     postData(serverhost + '/extension/paper-to-project/', { "ppid": paper_data["ppid"], "list_id": listID, "project_id": projectId}, headers)
         .then(data => {
         console.log(data); // JSON data parsed by `data.json()` call
